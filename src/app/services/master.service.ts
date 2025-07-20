@@ -14,8 +14,20 @@ export class MasterService {
   constructor(private http: HttpClient) {
   }
 
+  apiUrl: string = 'https://api.freeprojectapi.com/api/SmartParking/';
+
   getSitesByClientId(): Observable<ResponseModel> {
     const clientId = this.userSrv.loggedUserData.extraId;
-    return this.http.get<ResponseModel>("https://api.freeprojectapi.com/api/SmartParking/GetSitesByClientId?id=" + clientId)
+    return this.http.get<ResponseModel>(`${this.apiUrl}GetSitesByClientId?id=${clientId}`)
+  }
+
+  getBuildingBySiteId(siteId: number): Observable<ResponseModel> {
+    const clientId = this.userSrv.loggedUserData.extraId;
+    return this.http.get<ResponseModel>(`${this.apiUrl}GetBuildingBySiteId?id=${siteId}`)
+  }
+
+  getFloorsByBuildingId(buildingId: number): Observable<ResponseModel> {
+    const clientId = this.userSrv.loggedUserData.extraId;
+    return this.http.get<ResponseModel>(`${this.apiUrl}GetFloorsByBuildingId?id=${buildingId}`)
   }
 }

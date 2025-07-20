@@ -7,17 +7,23 @@
     </div>
     <div class="col-md-6">
       <div class="input-group">
-        <select class="form-select">
-          <option value="">Select Site</option>
+        <select class="form-select" [(ngModel)]="siteId" (change)="getBuilding()">
+          <option value="0">Select Site</option>
           @for (item of siteList; track $index) {
             <option [value]="item.siteId">{{ item.siteName }}</option>
           }
         </select>
-        <select class="form-select">
-          <option value="">Select Building</option>
+        <select class="form-select" [(ngModel)]="buildingId" (change)="changeFloorByBuilding()">
+          <option value="0">Select Building</option>
+          @for (item of buildingList; track $index) {
+            <option [value]="item.buildingId">{{ item.buildingName }}</option>
+          }
         </select>
-        <select class="form-select">
-          <option value="">Select Floor</option>
+        <select class="form-select" [(ngModel)]="floorId" (change)="onFloorSelect()">
+          <option value="0">Select Floor</option>
+          @for (item of floorList; track $index) {
+            <option [value]="item.floorId">{{ item.floorNo }}</option>
+          }
         </select>
 
         <button class="btn btn-outline-primary" type="button">
@@ -119,29 +125,32 @@
     </div>
     <div class="card-body">
       <div class="parking-legend mb-3">
-            <span class="legend-item"
-            ><span class="status-dot available"></span> Available</span
-            >
-        <span class="legend-item"
-        ><span class="status-dot occupied"></span> Occupied</span
-        >
-        <span class="legend-item"
-        ><span class="status-dot reserved"></span> Reserved</span
-        >
-        <span class="legend-item"
-        ><span class="status-dot maintenance"></span> Maintenance</span
-        >
+            <span class="legend-item">
+              <span class="status-dot available"></span> Total ({{parkingSpotArray.length}})</span>
+            <span class="legend-item">
+              <span class="status-dot available"></span>
+              Available
+            </span>
+        <span class="legend-item">
+          <span class="status-dot occupied"></span>
+          Occupied
+        </span>
       </div>
 
       <div class="parking-layout" id="parkingLayout">
-        <!-- Parking spots will be dynamically generated here -->
+        @for(item of parkingSpotArray; track $index) {
+        <div class="parking-spot available"><i class="bi bi-car-front"></i>
+          <div class="spot-number">{{item}}</div>
+          <div class="spot-status">Available</div>
+        </div>
+        }
       </div>
     </div>
   </div>
 </div>
 
 <!-- Book Spot Modal -->
-<div class="modal fade" id="bookSpotModal" tabindex="-1" aria-hidden="true">
+<div #bookSpot class="modal fade" id="bookSpotModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header bg-primary text-white">
