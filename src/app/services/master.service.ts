@@ -29,6 +29,10 @@ export class MasterService {
     return this.http.get<ResponseModel>(`${this.apiUrl}GetFloorsByBuildingId?id=${buildingId}`)
   }
 
+  getAllParkingByFloor(floorId: number): Observable<ResponseModel> {
+    return this.http.get<ResponseModel>(`${this.apiUrl}GetAllParkingByFloor?id=${floorId}`)
+  }
+
   bookSpot(obj:any): Observable<ResponseModel> {
     return this.http.post<ResponseModel>(`${this.apiUrl}AddParking`, obj)
 

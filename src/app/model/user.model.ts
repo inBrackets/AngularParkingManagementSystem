@@ -62,10 +62,29 @@ export interface IParking {
   parkDate: Date
   parkSpotNo: number
   inTime: Date
-  outTime: Date | null;
+  outTime: Date | null
   amount: number
   extraCharge: number
   parkingNo: string
 }
+
+export interface IParkingExt {
+  parkId: number
+  custName: string | null;
+  custMobileNo: string
+  vehicleNo: string
+  parkDate: Date
+  parkSpotNo: number
+  inTime: Date
+  outTime: Date | null
+  amount: number
+  extraCharge: number
+  floorNo: string
+  buildingName: string
+  siteName: string
+  parkingNo: string
+  clientName: string
+}
+
 
 

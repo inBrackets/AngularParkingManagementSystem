@@ -1,6 +1,6 @@
 import {Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
 import {MasterService} from '../../services/master.service';
-import {IBuilding, IFloor, IParking, ISite, ResponseModel} from '../../model/user.model';
+import {IBuilding, IFloor, IParking, IParkingExt, ISite, ResponseModel} from '../../model/user.model';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -37,6 +37,7 @@ export class DashboardComponent implements OnInit {
     "extraCharge": 0,
     "parkingNo": ""
   };
+  bookedSpots: IParkingExt[] = [];
 
   ngOnInit(): void {
     this.getSites();
@@ -80,11 +81,19 @@ export class DashboardComponent implements OnInit {
     for (let index= 1; index <= floor.totalParkingSpots; index++) {
       this.parkingSpotArray.push(index);
     }
+    this.getBooking();
+  }
+
+  getBooking() {
+    this.masterSrv.getAllParkingByFloor(this.floorId).subscribe((res: ResponseModel) => {
+      this.bookedSpots = res.data;
+    })
   }
 
   onBookSpot() {
-    this.masterSrv.bookSpot(this.bookSpotObj).subscribe((res: any) => {
-      alert("Spot Booked")
+    this.masterSrv.bookSpot(this.bookSpotObj).subscribe((res: ResponseModel) => {
+      alert("Spot Booked");
+      this.getBooking();
     })
   }
 }
