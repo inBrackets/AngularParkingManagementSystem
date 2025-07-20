@@ -39,7 +39,7 @@
                 class="badge bg-light text-primary me-2"
               >Entry Operator</span
               >
-            <span id="operatorName">John Doe</span>
+            <span id="operatorName">{{userSrv.loggedUserData.emailId}}</span>
           </div>
           <div class="dropdown">
             <button
@@ -52,7 +52,7 @@
             <ul class="dropdown-menu dropdown-menu-end">
               <li>
                 <h6 class="dropdown-header" id="operatorNameMenu">
-                  John Doe
+                  {{userSrv.loggedUserData.emailId}}
                 </h6>
               </li>
               <li>

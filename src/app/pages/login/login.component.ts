@@ -20,6 +20,7 @@ export class LoginComponent {
     this.userSrv.loginUser(this.loginObj).subscribe((res: IUserModel) => {
       alert("User found..navigating inside");
       localStorage.setItem("parkUser", JSON.stringify(res));
+      this.userSrv.loggedUserData = res;
       this.router.navigateByUrl("/dashboard");
     }, error => {
       alert("Wrong Credentials");
