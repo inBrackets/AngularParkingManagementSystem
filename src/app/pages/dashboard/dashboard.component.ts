@@ -1,6 +1,6 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
 import {MasterService} from '../../services/master.service';
-import {IBuilding, IFloor, ISite, ResponseModel} from '../../model/user.model';
+import {IBuilding, IFloor, IParking, ISite, ResponseModel} from '../../model/user.model';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -21,10 +21,39 @@ export class DashboardComponent implements OnInit {
   siteId: number = 0;
   buildingId: number = 0;
   floorId: number = 0;
-  parkingSpotArray: number[] = []
+  parkingSpotArray: number[] = [];
+  @ViewChild("bookSpot") bookModal!: ElementRef;
+  bookSpotObj: IParking = {
+    "parkId": 0,
+    "floorId": 0,
+    "custName": "",
+    "custMobileNo": "",
+    "vehicleNo": "",
+    "parkDate": new Date(),
+    "parkSpotNo": 0,
+    "inTime": new Date(),
+    "outTime": null,
+    "amount": 0,
+    "extraCharge": 0,
+    "parkingNo": ""
+  };
 
   ngOnInit(): void {
     this.getSites();
+  }
+
+  openModal(spotNumber: number) {
+    this.bookSpotObj.parkSpotNo = spotNumber;
+    this.bookSpotObj.floorId = this.floorId;
+    if(this.bookModal) {
+      this.bookModal.nativeElement.style.display = 'block';
+    }
+  }
+
+  closeModal() {
+    if(this.bookModal) {
+      this.bookModal.nativeElement.style.display = 'none';
+    }
   }
 
   getSites() {
@@ -51,5 +80,11 @@ export class DashboardComponent implements OnInit {
     for (let index= 1; index <= floor.totalParkingSpots; index++) {
       this.parkingSpotArray.push(index);
     }
+  }
+
+  onBookSpot() {
+    this.masterSrv.bookSpot(this.bookSpotObj).subscribe((res: any) => {
+      alert("Spot Booked")
+    })
   }
 }

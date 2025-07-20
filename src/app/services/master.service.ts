@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {ResponseModel} from '../model/user.model';
+import {IParking, ResponseModel} from '../model/user.model';
 import {UserService} from './user.service';
 
 @Injectable({
@@ -22,12 +22,15 @@ export class MasterService {
   }
 
   getBuildingBySiteId(siteId: number): Observable<ResponseModel> {
-    const clientId = this.userSrv.loggedUserData.extraId;
     return this.http.get<ResponseModel>(`${this.apiUrl}GetBuildingBySiteId?id=${siteId}`)
   }
 
   getFloorsByBuildingId(buildingId: number): Observable<ResponseModel> {
-    const clientId = this.userSrv.loggedUserData.extraId;
     return this.http.get<ResponseModel>(`${this.apiUrl}GetFloorsByBuildingId?id=${buildingId}`)
+  }
+
+  bookSpot(obj:any): Observable<ResponseModel> {
+    return this.http.post<ResponseModel>(`${this.apiUrl}AddParking`, obj)
+
   }
 }

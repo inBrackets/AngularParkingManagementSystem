@@ -53,3 +53,19 @@ export interface IFloor {
   totalParkingSpots: number
 }
 
+export interface IParking {
+  parkId: number
+  floorId: number
+  custName: string
+  custMobileNo: string
+  vehicleNo: string
+  parkDate: Date
+  parkSpotNo: number
+  inTime: Date
+  outTime: Date | null;
+  amount: number
+  extraCharge: number
+  parkingNo: string
+}
+
+

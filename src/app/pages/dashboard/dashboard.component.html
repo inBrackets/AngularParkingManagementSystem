@@ -139,7 +139,8 @@
 
       <div class="parking-layout" id="parkingLayout">
         @for(item of parkingSpotArray; track $index) {
-        <div class="parking-spot available"><i class="bi bi-car-front"></i>
+        <div class="parking-spot available" (click)="openModal(item)">
+          <i class="bi bi-car-front"></i>
           <div class="spot-number">{{item}}</div>
           <div class="spot-status">Available</div>
         </div>
@@ -150,16 +151,16 @@
 </div>
 
 <!-- Book Spot Modal -->
-<div #bookSpot class="modal fade" id="bookSpotModal" tabindex="-1" aria-hidden="true">
+<div #bookSpot class="modal" id="bookSpotModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
+      <div class="modal-header bg-warning text-white">
         <h5 class="modal-title">
           <i class="bi bi-car-front me-2"></i> Book Parking Spot
         </h5>
         <button
           type="button"
-          class="btn-close btn-close-white"
+          class="btn-close btn-close-white" (click)="closeModal()"
           data-bs-dismiss="modal"
           aria-label="Close"
         ></button>
@@ -169,7 +170,7 @@
           <div class="mb-3">
             <label class="form-label">Park Spot No</label>
             <input
-              type="text"
+              type="number" name="parkSpotNo" [(ngModel)]="bookSpotObj.parkSpotNo"
               class="form-control"
               id="spotNumber"
               readonly
@@ -181,7 +182,7 @@
             >Vehicle Number</label
             >
             <input
-              type="text"
+              type="text" name="vehicleNo" [(ngModel)]="bookSpotObj.vehicleNo"
               class="form-control"
               id="vehicleNumber"
               placeholder="Enter vehicle number"
@@ -192,24 +193,18 @@
           <div class="mb-3">
             <label for="vehicleType" class="form-label">Amount</label>
             <input
-              type="number"
+              type="number" name="amount" [(ngModel)]="bookSpotObj.amount"
               class="form-control"
               id="vehicleType"
               placeholder="Enter Amount "
               required
             />
-            <!-- <select class="form-select" id="vehicleType" required>
-              <option value="">Select vehicle type</option>
-              <option value="car">Car</option>
-              <option value="bike">Bike</option>
-              <option value="truck">Truck</option>
-            </select> -->
           </div>
 
           <div class="mb-3">
             <label for="driverName" class="form-label">Customer Name</label>
             <input
-              type="text"
+              type="text" name="custName" [(ngModel)]="bookSpotObj.custName"
               class="form-control"
               id="driverName"
               placeholder="Customer name"
@@ -220,20 +215,10 @@
             <label for="contactNumber" class="form-label"
             >Contact Number</label
             >
-            <input
-              type="tel"
+            <input type="text" name="custMobileNo" [(ngModel)]="bookSpotObj.custMobileNo"
               class="form-control"
               id="contactNumber"
               placeholder="Enter contact number"
-            />
-          </div>
-
-          <div class="mb-3">
-            <label for="entryTime" class="form-label">Entry Time</label>
-            <input
-              type="datetime-local"
-              class="form-control"
-              id="entryTime"
             />
           </div>
         </form>
@@ -246,7 +231,7 @@
         >
           Cancel
         </button>
-        <button type="button" class="btn btn-primary" id="confirmBookBtn">
+        <button type="button" (click)="onBookSpot()" class="btn btn-primary" id="confirmBookBtn">
           <i class="bi bi-check2-circle me-1"></i> Confirm Booking
         </button>
       </div>
