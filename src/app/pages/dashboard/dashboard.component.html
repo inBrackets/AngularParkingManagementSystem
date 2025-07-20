@@ -1,1 +1,342 @@
-<p>dashboard works!</p>
+<div class="container-fluid py-4">
+  <!-- Dashboard Header -->
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <h2 class="mb-1">Parking Dashboard</h2>
+      <p class="text-muted">Manage and monitor parking spots</p>
+    </div>
+    <div class="col-md-4">
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search spot number..."
+          id="searchSpot"
+        />
+        <button class="btn btn-outline-primary" type="button">
+          <i class="bi bi-search"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
+      <div class="card h-100 parking-stat-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h6 class="text-muted">Total Spots</h6>
+              <h3 class="mb-0" id="totalSpots">50</h3>
+            </div>
+            <div class="stat-icon bg-primary text-white">
+              <i class="bi bi-p-square"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
+      <div class="card h-100 parking-stat-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h6 class="text-muted">Available</h6>
+              <h3 class="mb-0 text-success" id="availableSpots">28</h3>
+            </div>
+            <div class="stat-icon bg-success text-white">
+              <i class="bi bi-check-circle"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
+      <div class="card h-100 parking-stat-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h6 class="text-muted">Occupied</h6>
+              <h3 class="mb-0 text-danger" id="occupiedSpots">22</h3>
+            </div>
+            <div class="stat-icon bg-danger text-white">
+              <i class="bi bi-x-circle"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
+      <div class="card h-100 parking-stat-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h6 class="text-muted">Occupancy Rate</h6>
+              <h3 class="mb-0 text-primary" id="occupancyRate">44%</h3>
+            </div>
+            <div class="stat-icon bg-info text-white">
+              <i class="bi bi-graph-up"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Parking Layout -->
+  <div class="card mb-4 shadow-sm">
+    <div
+      class="card-header d-flex justify-content-between align-items-center"
+    >
+      <h5 class="mb-0"><i class="bi bi-grid me-2"></i> Parking Layout</h5>
+      <div>
+        <button
+          class="btn btn-sm btn-outline-secondary me-2"
+          id="refreshLayout"
+        >
+          <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+        </button>
+        <div class="btn-group btn-group-sm">
+          <button class="btn btn-outline-secondary active" data-view="grid">
+            <i class="bi bi-grid-3x3"></i>
+          </button>
+          <button class="btn btn-outline-secondary" data-view="list">
+            <i class="bi bi-list"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="parking-legend mb-3">
+            <span class="legend-item"
+            ><span class="status-dot available"></span> Available</span
+            >
+        <span class="legend-item"
+        ><span class="status-dot occupied"></span> Occupied</span
+        >
+        <span class="legend-item"
+        ><span class="status-dot reserved"></span> Reserved</span
+        >
+        <span class="legend-item"
+        ><span class="status-dot maintenance"></span> Maintenance</span
+        >
+      </div>
+
+      <div class="parking-layout" id="parkingLayout">
+        <!-- Parking spots will be dynamically generated here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Book Spot Modal -->
+<div class="modal fade" id="bookSpotModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-car-front me-2"></i> Book Parking Spot
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form id="bookSpotForm">
+          <div class="mb-3">
+            <label class="form-label">Park Spot No</label>
+            <input
+              type="text"
+              class="form-control"
+              id="spotNumber"
+              readonly
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="vehicleNumber" class="form-label"
+            >Vehicle Number</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="vehicleNumber"
+              placeholder="Enter vehicle number"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="vehicleType" class="form-label">Amount</label>
+            <input
+              type="number"
+              class="form-control"
+              id="vehicleType"
+              placeholder="Enter Amount "
+              required
+            />
+            <!-- <select class="form-select" id="vehicleType" required>
+              <option value="">Select vehicle type</option>
+              <option value="car">Car</option>
+              <option value="bike">Bike</option>
+              <option value="truck">Truck</option>
+            </select> -->
+          </div>
+
+          <div class="mb-3">
+            <label for="driverName" class="form-label">Customer Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="driverName"
+              placeholder="Customer name"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="contactNumber" class="form-label"
+            >Contact Number</label
+            >
+            <input
+              type="tel"
+              class="form-control"
+              id="contactNumber"
+              placeholder="Enter contact number"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="entryTime" class="form-label">Entry Time</label>
+            <input
+              type="datetime-local"
+              class="form-control"
+              id="entryTime"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-dismiss="modal"
+        >
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary" id="confirmBookBtn">
+          <i class="bi bi-check2-circle me-1"></i> Confirm Booking
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Release Spot Modal -->
+<div
+  class="modal fade"
+  id="releaseSpotModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-car-front me-2"></i> Release Parking Spot
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="parking-details mb-4">
+          <h6>Spot Information</h6>
+          <div class="row">
+            <div class="col-md-6">
+              <p>
+                <strong>Spot Number:</strong>
+                <span id="releaseSpotNumber"></span>
+              </p>
+              <p>
+                <strong>Vehicle Number:</strong>
+                <span id="releaseVehicleNumber"></span>
+              </p>
+              <p>
+                <strong>Vehicle Type:</strong>
+                <span id="releaseVehicleType"></span>
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p>
+                <strong>Entry Time:</strong>
+                <span id="releaseEntryTime"></span>
+              </p>
+              <p>
+                <strong>Duration:</strong>
+                <span id="releaseDuration"></span>
+              </p>
+              <p>
+                <strong>Driver:</strong>
+                <span id="releaseDriverName"></span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <form id="releaseSpotForm">
+          <div class="mb-3">
+            <label for="exitTime" class="form-label">Exit Time</label>
+            <input
+              type="datetime-local"
+              class="form-control"
+              id="exitTime"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="paymentMethod" class="form-label"
+            >Payment Method</label
+            >
+            <select class="form-select" id="paymentMethod">
+              <option value="cash">Cash</option>
+              <option value="card">Credit/Debit Card</option>
+              <option value="upi">UPI</option>
+              <option value="wallet">Digital Wallet</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="remarks" class="form-label">Remarks</label>
+            <textarea class="form-control" id="remarks" rows="2"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-dismiss="modal"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          id="confirmReleaseBtn"
+        >
+          <i class="bi bi-check2-circle me-1"></i> Confirm Release
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
