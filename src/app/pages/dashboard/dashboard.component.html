@@ -1,18 +1,25 @@
 <div class="container-fluid py-4">
   <!-- Dashboard Header -->
   <div class="row mb-4">
-    <div class="col-md-8">
+    <div class="col-md-6">
       <h2 class="mb-1">Parking Dashboard</h2>
       <p class="text-muted">Manage and monitor parking spots</p>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="input-group">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Search spot number..."
-          id="searchSpot"
-        />
+        <select class="form-select">
+          <option value="">Select Site</option>
+          @for (item of siteList; track $index) {
+            <option [value]="item.siteId">{{ item.siteName }}</option>
+          }
+        </select>
+        <select class="form-select">
+          <option value="">Select Building</option>
+        </select>
+        <select class="form-select">
+          <option value="">Select Floor</option>
+        </select>
+
         <button class="btn btn-outline-primary" type="button">
           <i class="bi bi-search"></i>
         </button>
