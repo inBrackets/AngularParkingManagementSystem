@@ -86,5 +86,12 @@ export interface IParkingExt {
   clientName: string
 }
 
+export interface IMarkExit {
+  parkId: number
+  outTime: Date | null
+  extraCharge: number
+}
+
+
 
 

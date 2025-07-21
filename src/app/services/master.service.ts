@@ -35,6 +35,9 @@ export class MasterService {
 
   bookSpot(obj:any): Observable<ResponseModel> {
     return this.http.post<ResponseModel>(`${this.apiUrl}AddParking`, obj)
+  }
 
+  releaseSpot(obj:any): Observable<ResponseModel> {
+    return this.http.post<ResponseModel>(`${this.apiUrl}MarExit`, obj)
   }
 }

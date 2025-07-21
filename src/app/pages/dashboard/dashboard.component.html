@@ -139,11 +139,20 @@
 
       <div class="parking-layout" id="parkingLayout">
         @for(item of parkingSpotArray; track $index) {
-        <div class="parking-spot available" (click)="openModal(item)">
-          <i class="bi bi-car-front"></i>
-          <div class="spot-number">{{item}}</div>
-          <div class="spot-status">Available</div>
-        </div>
+          @if (checkIfSpotBooked(item)?.vehicleNo != null) {
+            <div class="parking-spot occupied" (click)="openReleaseModal(checkIfSpotBooked(item)?.parkId)">
+              <i class="bi bi-p-square"></i>
+              <div class="spot-number">{{item}}</div>
+              <div class="spot-status">Occupied</div>
+              <div class="vehicle-info">{{checkIfSpotBooked(item)?.vehicleNo}}</div>
+            </div>
+          } @else {
+            <div class="parking-spot available" (click)="openBookModal(item)">
+              <i class="bi bi-car-front"></i>
+              <div class="spot-number">{{item}}</div>
+              <div class="spot-status">Available</div>
+            </div>
+          }
         }
       </div>
     </div>
@@ -160,7 +169,7 @@
         </h5>
         <button
           type="button"
-          class="btn-close btn-close-white" (click)="closeModal()"
+          class="btn-close btn-close-white" (click)="closeBookModal()"
           data-bs-dismiss="modal"
           aria-label="Close"
         ></button>
@@ -241,7 +250,8 @@
 
 <!-- Release Spot Modal -->
 <div
-  class="modal fade"
+  #releaseSpot
+  class="modal"
   id="releaseSpotModal"
   tabindex="-1"
   aria-hidden="true"
@@ -260,66 +270,16 @@
         ></button>
       </div>
       <div class="modal-body">
-        <div class="parking-details mb-4">
-          <h6>Spot Information</h6>
-          <div class="row">
-            <div class="col-md-6">
-              <p>
-                <strong>Spot Number:</strong>
-                <span id="releaseSpotNumber"></span>
-              </p>
-              <p>
-                <strong>Vehicle Number:</strong>
-                <span id="releaseVehicleNumber"></span>
-              </p>
-              <p>
-                <strong>Vehicle Type:</strong>
-                <span id="releaseVehicleType"></span>
-              </p>
-            </div>
-            <div class="col-md-6">
-              <p>
-                <strong>Entry Time:</strong>
-                <span id="releaseEntryTime"></span>
-              </p>
-              <p>
-                <strong>Duration:</strong>
-                <span id="releaseDuration"></span>
-              </p>
-              <p>
-                <strong>Driver:</strong>
-                <span id="releaseDriverName"></span>
-              </p>
-            </div>
-          </div>
-        </div>
-
         <form id="releaseSpotForm">
           <div class="mb-3">
-            <label for="exitTime" class="form-label">Exit Time</label>
+            <label for="exitTime" class="form-label">Extra Amount</label>
             <input
-              type="datetime-local"
+              type="text" [(ngModel)]="markExitObj.extraCharge"
               class="form-control"
               id="exitTime"
             />
           </div>
 
-          <div class="mb-3">
-            <label for="paymentMethod" class="form-label"
-            >Payment Method</label
-            >
-            <select class="form-select" id="paymentMethod">
-              <option value="cash">Cash</option>
-              <option value="card">Credit/Debit Card</option>
-              <option value="upi">UPI</option>
-              <option value="wallet">Digital Wallet</option>
-            </select>
-          </div>
-
-          <div class="mb-3">
-            <label for="remarks" class="form-label">Remarks</label>
-            <textarea class="form-control" id="remarks" rows="2"></textarea>
-          </div>
         </form>
       </div>
       <div class="modal-footer">
@@ -331,7 +291,7 @@
           Cancel
         </button>
         <button
-          type="button"
+          type="button" (click)="onExitCard()"
           class="btn btn-success"
           id="confirmReleaseBtn"
         >
