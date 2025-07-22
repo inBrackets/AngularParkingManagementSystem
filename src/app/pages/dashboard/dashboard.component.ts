@@ -2,14 +2,15 @@ import {Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
 import {MasterService} from '../../services/master.service';
 import {IBuilding, IFloor, IMarkExit, IParking, IParkingExt, ISite, ResponseModel} from '../../model/user.model';
 import {FormsModule} from '@angular/forms';
-import {NgClass, NgForOf} from '@angular/common';
+import {DecimalPipe, NgClass, NgForOf} from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
   imports: [
     FormsModule,
     NgClass,
-    NgForOf
+    NgForOf,
+    DecimalPipe
   ],
   templateUrl: './dashboard.component.html',
   standalone: true,
@@ -46,19 +47,15 @@ export class DashboardComponent implements OnInit {
     "outTime": new Date(),
     "extraCharge": 0
   }
-  bookedSpots: IParkingExt[] = [];
+  allSpotsPerFloor: IParkingExt[] = [];
+  bookedSpotsPerFloor: IParkingExt[] = [];
 
   ngOnInit(): void {
     this.getSites();
   }
 
-  checkIfSpotBooked(spotNo: number){
-    const isExist = this.bookedSpots.find(s => s.parkSpotNo == spotNo && s.outTime == null);
-    if(isExist) {
-      return isExist;
-    } else {
-      return undefined;
-    }
+  checkIfSpotBooked(parking: IParkingExt){
+    return parking.outTime == null;
   }
 
   openBookModal(spotNumber: number) {
@@ -97,7 +94,8 @@ export class DashboardComponent implements OnInit {
   }
 
   getBuilding() {
-    this.parkingSpotArray = [];
+    this.allSpotsPerFloor = [];
+    this.bookedSpotsPerFloor = [];
     this.floorList = [];
     this.masterSrv.getBuildingBySiteId(this.siteId).subscribe((res: ResponseModel) => {
       this.buildingList = res.data;
@@ -105,25 +103,24 @@ export class DashboardComponent implements OnInit {
   }
 
   changeFloorByBuilding() {
-    this.parkingSpotArray = [];
+    this.allSpotsPerFloor = [];
+    this.bookedSpotsPerFloor = [];
     this.masterSrv.getFloorsByBuildingId(this.buildingId).subscribe((res: ResponseModel) => {
       this.floorList = res.data;
     })
   }
 
   onFloorSelect() {
-    this.parkingSpotArray = [];
+    this.allSpotsPerFloor = [];
+    this.bookedSpotsPerFloor = [];
     const floor = this.floorList.find((m: IFloor) => m.floorId == this.floorId);
-    // @ts-ignore
-    for (let index= 1; index <= floor.totalParkingSpots; index++) {
-      this.parkingSpotArray.push(index);
-    }
     this.getBooking();
   }
 
   getBooking() {
     this.masterSrv.getAllParkingByFloor(this.floorId).subscribe((res: ResponseModel) => {
-      this.bookedSpots = res.data;
+      this.allSpotsPerFloor = res.data;
+      this.bookedSpotsPerFloor = this.allSpotsPerFloor.filter(s=>s.outTime == null);
     })
   }
 
@@ -132,6 +129,7 @@ export class DashboardComponent implements OnInit {
       alert("Spot Booked");
       this.getBooking();
     })
+    this.closeBookModal();
   }
 
   onExitCard() {
