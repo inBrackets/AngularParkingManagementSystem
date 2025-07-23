@@ -3,6 +3,7 @@ import {MasterService} from '../../services/master.service';
 import {IBuilding, IFloor, IMarkExit, IParking, IParkingExt, ISite, ResponseModel} from '../../model/user.model';
 import {FormsModule} from '@angular/forms';
 import {DecimalPipe, NgClass, NgForOf} from '@angular/common';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,7 +11,8 @@ import {DecimalPipe, NgClass, NgForOf} from '@angular/common';
     FormsModule,
     NgClass,
     NgForOf,
-    DecimalPipe
+    DecimalPipe,
+    RouterLink
   ],
   templateUrl: './dashboard.component.html',
   standalone: true,
